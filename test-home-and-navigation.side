@@ -1,0 +1,116 @@
+{
+  "id": "test-home-and-navigation",
+  "version": "2.0",
+  "name": "Test Home and Navigation",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-home-page",
+      "name": "Test Home Page",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/",
+          "value": ""
+        },
+        {
+          "command": "assertTitle",
+          "target": "",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=body",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=header",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-navigate-to-movies",
+      "name": "Navigate to Movies List",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "xpath=//a[contains(@href, '/movies')]",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, .movies",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-navigate-to-favorites",
+      "name": "Navigate to Favorites",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "xpath=//a[contains(@href, '/favorites')]",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.favorites, [data-page='favorites']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-navigate-to-contact",
+      "name": "Navigate to Contact",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "xpath=//a[contains(@href, '/contact')]",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form, .contact",
+          "value": "5000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "navigation-suite",
+      "name": "Navigation Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-home-page",
+        "test-navigate-to-movies",
+        "test-navigate-to-favorites",
+        "test-navigate-to-contact"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

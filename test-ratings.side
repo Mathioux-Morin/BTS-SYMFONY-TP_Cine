@@ -1,0 +1,193 @@
+{
+  "id": "test-ratings",
+  "version": "2.0",
+  "name": "Test Ratings",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-ratings-list",
+      "name": "View Ratings List",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.ratings-list, .rating-item, table, [data-page='ratings']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.rating-card, tr, article",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-rating-new",
+      "name": "Create New Rating",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating/new",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST'], form[action*='new']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=select[name*='movie'], select[id*='movie']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=option",
+          "value": "2000"
+        },
+        {
+          "command": "click",
+          "target": "css=option:nth-child(2)",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[type='number'][name*='rate'], input[id*='rate']",
+          "value": "8"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, .ratings-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-rating-show",
+      "name": "View Rating Details",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/rating/'], .rating-card, tr",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/rating/']:not([href*='/edit']):not([href*='/delete']), .rating-card",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.rating-details, .rating-show",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-rating-edit",
+      "name": "Edit Rating",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST']",
+          "value": "5000"
+        },
+        {
+          "command": "clear",
+          "target": "css=input[type='number'][name*='rate']",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[type='number'][name*='rate']",
+          "value": "9"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, .ratings-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-rating-delete",
+      "name": "Delete Rating",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=button[name='_delete'], button:contains('Delete')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=button[name='_delete'], button:contains('Delete')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.ratings-list, body",
+          "value": "5000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "ratings-suite",
+      "name": "Ratings Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-ratings-list",
+        "test-rating-new",
+        "test-rating-show",
+        "test-rating-edit",
+        "test-rating-delete"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

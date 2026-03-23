@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        
+        {# --- 1. GAUCHE : Logo / Accueil --- #}
+        <a class="navbar-brand" href="{{ path('home_index') }}">Accueil</a>
+
+        {# Bouton Hamburger (Indispensable pour le responsive mobile) #}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {# Contenu qui se replie sur mobile #}
+        <div class="collapse navbar-collapse" id="navbarNav">
+            
+            {# --- 2. CENTRE : Barre de recherche --- #}
+            {# mx-auto : Pousse les voisins et se centre horizontalement #}
+            <div class="mx-auto my-3 my-lg-0">
+                {{ include('movies/_movies_search.html.twig') }}
+            </div>
+                    
+            {# --- 3. DROITE : Le reste du menu --- #}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('movie_list') }}">Films</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('contact_index') }}">Contact</a>
+                </li>
+                {% if (app.user) %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('favorites_list') }}">Favoris</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_rating_index') }}">Évaluations</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Collections
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path('app_collections_index') }}">Liste</a>
+                        <a class="dropdown-item" href="{{ path('app_collections_new', parameters={'idCreator': app.user.id}) }}">Nouvelle</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_movie_crud_new') }}">Ajouter</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

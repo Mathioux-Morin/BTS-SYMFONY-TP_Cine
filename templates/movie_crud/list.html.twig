@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movies{% endblock %}
+
+{% block body %}
+<h1>Bienvenue sur la page des films !</h1>
+{% if term is not empty %}
+    <h2>Résultats de la recherche pour "{{ term }}" :</h2>
+{% endif %}
+{{ include('movie_crud/_display.html.twig', {'movies': movies, 'tmdb_image_prefix': tmdb_image_prefix}) }}
+{% endblock %}

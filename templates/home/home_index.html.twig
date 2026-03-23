@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+{% if (app.user) %}
+<h1>Bienvenue {{ app.user.firstname }} sur la page d'accueil !</h1>
+{% else %}
+<h1>Bienvenu sur la page d'accueil cher voyageur !</h1>
+{% endif %}
+
+{% if is_granted('ROLE_ADMIN') %}
+<div class='alert alert-danger' role="alert">
+Attention, vous êtes actuellement connecté en tant qu'admin
+</div>
+{% endif %}
+
+
+{% endblock %}

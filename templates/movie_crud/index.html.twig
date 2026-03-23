@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Films{% endblock %}
+
+{% block body %}
+{# {% if term is not empty %}
+    <h2>Résultats de la recherche pour "{{ term }}" :</h2>
+{% endif %} #}
+    {{ include('movie_crud/_display_movies.html.twig', {'movies': movies, 'tmdb_image_prefix': tmdb_image_prefix}) }}
+{% endblock %}

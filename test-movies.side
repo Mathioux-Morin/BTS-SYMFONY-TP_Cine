@@ -1,0 +1,183 @@
+{
+  "id": "test-movies",
+  "version": "2.0",
+  "name": "Test Movies",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-movies-list",
+      "name": "View Movies List",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, .movies, [data-page='movies']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.movie-card, .movie-item, article",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-movies-search",
+      "name": "Search Movies",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query'], input[placeholder*='search' i]",
+          "value": "Avatar"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit'], button:contains('Search')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, .movie-card, [data-page='movies']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-show",
+      "name": "View Movie Details",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-card, .movie-item, a[href*='/movies/']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=.movie-card, .movie-item, a[href*='/movies/']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-details, .movie-show, [data-page='movie-show']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.movie-title, h1, h2",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-save-movie",
+      "name": "Save Movie to Database",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[name='query']",
+          "value": "Inception"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/movies/']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/movies/']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/save_movie/'], button:contains('Save')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/save_movie/'], button:contains('Save')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, [role='alert']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-share-movie-by-mail",
+      "name": "Share Movie by Mail",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/movies/']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/movies/']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/mail'], button:contains('Share')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/mail'], button:contains('Share')",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "movies-suite",
+      "name": "Movies Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-movies-list",
+        "test-movies-search",
+        "test-movie-show",
+        "test-save-movie",
+        "test-share-movie-by-mail"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

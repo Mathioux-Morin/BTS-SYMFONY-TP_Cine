@@ -1,0 +1,90 @@
+{# On définit l'image de fond (Backdrop) ou l'affiche par défaut si pas de backdrop #}
+{% set bgImage = movie.backdrop_path ? (tmdb_image_prefix ~ movie.backdrop_path) : (tmdb_image_prefix ~ movie.poster_path) %}
+
+<div class="position-relative text-white" 
+     style="background-image: url('{{ bgImage }}'); background-size: cover; background-position: center; min-height: 600px;">
+    
+    {# 1. Calque sombre pour la lisibilité (Overlay) #}
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.85;"></div>
+
+    {# 2. Conteneur principal #}
+    <div class="container position-relative py-5 h-100 d-flex align-items-center">
+        <div class="row w-100">
+            
+            {# --- COLONNE GAUCHE : L'AFFICHE --- #}
+            <div class="col-md-4 col-lg-3 mb-4 mb-md-0">
+                {% if movie.poster_path %}
+                    <img src="{{ tmdb_image_prefix }}{{ movie.poster_path }}" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="{{ movie.title }}"
+                         style="border: 1px solid #1f1f1f;">
+                {% else %}
+                    <img src="https://placehold.co/1000x1500/EEE/31343C?font=montserrat&text=No+Image" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="Image non disponible">
+                {% endif %}
+            </div>
+
+            {# --- COLONNE DROITE : LES INFOS --- #}
+            <div class="col-md-8 col-lg-9 d-flex flex-column justify-content-center">
+                
+                {# Titre et Année (ex: Zootopie 2 (2025)) #}
+                <h1 class="fw-bold display-5">
+                    {{ movie.title }} 
+                    {# Si vous avez la date de sortie, on affiche l'année #}
+                    {% if movie.release_date is defined and movie.release_date %}
+                        <span class="text-white-50 fw-light">({{ movie.release_date|date("Y") }})</span>
+                    {% endif %}
+                </h1>
+
+                {# Actions / Boutons (Factice pour le look) #}
+                <div class="my-3">
+                    <span class="badge bg-secondary border border-light rounded-pill p-2">Film</span>
+                    {# Vous pouvez ajouter d'autres badges ici comme les genres #}
+                </div>
+
+                {# Synopsis #}
+                <div class="mt-4">
+                    <h3 class="h4 fw-bold">Synopsis</h3>
+                    <p class="fs-5 lh-sm text-light opacity-75">
+                        {{ movie.overview ?: "Aucun résumé disponible pour ce film." }}
+                    </p>
+                </div>
+                {# Boutons #}
+                <span style="display: inline-flex;" class="mt-4 gap-3">
+                    {# Bouton Retour #}
+                    <div class="mt-5">
+                        <a href="{{ path('movie_list') }}" class="btn btn-outline-light rounded-pill px-4">
+                            &larr; Retour à la liste
+                        </a>
+                    </div>
+
+                    {# Bouton Partager par mail #}
+                    <div class="mt-5">
+                        <a href="{{ path(name = 'share_mail', parameters = {'idMovie': movie.id, 'title': movie.title, 'desc': movie.overview, 'posterPath': movie.poster_path}) }}" class="btn btn-outline-light rounded-pill px-4">
+                            Partager par mail
+                        </a>
+                    </div>
+                    
+                    {% if is_granted('ROLE_ADMIN') %}
+                    {# Bouton enregistrer #}
+
+                    <div class="mt-5">
+                        <a href="{{ path(name = 'app_movie_save', parameters = {'idMovie': movie.id, 'title': movie.title, 'desc': movie.overview, 'posterPath': movie.poster_path}) }}" class="btn btn-outline-light rounded-pill px-4">
+                            Enregistrer
+                        </a>
+                    </div>
+
+                    {# Bouton Partager sur discord #}
+                    <div class="mt-5">
+                        <a href="{{ path(name = 'share_discord', parameters = {'idMovie': movie.id, 'title': movie.title, 'desc': movie.overview, 'posterPath': movie.poster_path}) }}" class="btn btn-outline-light rounded-pill px-4">
+                            Partager sur Discord
+                        </a>
+                    </div>
+                    {% endif %}
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>

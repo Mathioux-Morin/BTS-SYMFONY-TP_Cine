@@ -1,0 +1,17 @@
+<div class="d-flex flex-wrap justify-content-center">
+    {% for movie in movies %}
+        <a href="{{ path(name = 'app_movie_crud_show', parameters = {'id': movie.idImdb}) }} " class="text-decoration-none text-light m-2">
+            <div class="card bg-dark text-light m-2" style="width: 18rem;">
+                {% if movie.posterPath %}
+                    <img src="{{ tmdb_image_prefix }}{{ movie.posterPath }}" class="card-img-top" alt="{{ movie.title }}">
+                {% else %}
+                    <img src="https://placehold.co/1000x1500/EEE/31343C?font=montserrat&text=No+Image" class="card-img-top" alt="No Image Available">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">{{ movie.overview|length > 100 ? movie.overview|slice(0, 100) ~ '...' : movie.overview }}</p>
+                </div>
+            </div>
+        </a>
+{% endfor %}
+</div>

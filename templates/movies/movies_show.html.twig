@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Films{% endblock %}
+
+{% block body %}
+{{ include('movies/_display_one_movie.html.twig', {'movie': movie, 'tmdb_image_prefix': tmdb_image_prefix}) }}
+{% endblock %}

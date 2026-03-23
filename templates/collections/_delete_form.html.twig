@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_collections_delete', {'id': collection.id}) }}" style="display: inline-block;">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ collection.id) }}">
+    <button type="submit" class="btn btn-danger btn-lg px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette collection ?');">
+        <i class="bi bi-trash me-2"></i>Supprimer
+    </button>
+</form>

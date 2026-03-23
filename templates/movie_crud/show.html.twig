@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block body %}
+
+<div class="position-relative text-white" 
+     style="background-image: url('{{ tmdb_image_prefix }}{{ movie.posterPath }}'); background-size: cover; background-position: center; min-height: 600px;">
+    
+    {# 1. Calque sombre pour la lisibilité (Overlay) #}
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.85;"></div>
+
+    {# 2. Conteneur principal #}
+    <div class="container position-relative py-5 h-100 d-flex align-items-center">
+        <div class="row w-100">
+            
+            {# --- COLONNE GAUCHE : L'AFFICHE --- #}
+            <div class="col-md-4 col-lg-3 mb-4 mb-md-0">
+                {% if movie.posterPath %}
+                    <img src="{{ tmdb_image_prefix }}{{ movie.posterPath }}" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="{{ movie.title }}"
+                         style="border: 1px solid #1f1f1f;">
+                {% else %}
+                    <img src="https://placehold.co/1000x1500/EEE/31343C?font=montserrat&text=No+Image" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="Image non disponible">
+                {% endif %}
+            </div>
+
+            {# --- COLONNE DROITE : LES INFOS --- #}
+            <div class="col-md-8 col-lg-9 d-flex flex-column justify-content-center">
+                
+                {# Titre et Année #}
+                <h1 class="fw-bold display-5">
+                    {{ movie.title }} 
+                    {% if movie.releaseDate %}
+                        <span class="text-white-50 fw-light">({{ movie.releaseDate|date("Y") }})</span>
+                    {% endif %}
+                </h1>
+
+                {# Badges #}
+                <div class="my-3">
+                    <span class="badge bg-secondary border border-light rounded-pill p-2">Film</span>
+                    {% if movie.idImdb %}
+                        <span class="badge bg-secondary border border-light rounded-pill p-2">ID IMDB: {{ movie.idImdb }}</span>
+                    {% endif %}
+                </div>
+
+                {# Synopsis #}
+                <div class="mt-4">
+                    <h3 class="h4 fw-bold">Synopsis</h3>
+                    <p class="fs-5 lh-sm text-light opacity-75">
+                        {{ movie.overview ?: "Aucun résumé disponible pour ce film." }}
+                    </p>
+                </div>
+
+                {# Informations supplémentaires #}
+                <div class="mt-4">
+                    <div class="row">
+                        {% if movie.releaseDate %}
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted mb-1">Date de sortie</p>
+                                <p class="fs-6">{{ movie.releaseDate|date('d/m/Y') }}</p>
+                            </div>
+                        {% endif %}
+                        {% if movie.runtime %}
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted mb-1">Durée</p>
+                                <p class="fs-6">{{ movie.runtime }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Boutons #}
+                <div class="mt-5 d-flex gap-3">
+                    <a href="{{ path('app_movie_crud_index') }}" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                    </a>
+                    <a href="{{ path('app_movie_crud_edit', {'id': movie.id}) }}" class="btn btn-warning rounded-pill px-4">
+                        <i class="bi bi-pencil me-2"></i>Éditer
+                    </a>
+                    <form method="post" action="{{ path('app_movie_crud_delete', {'id': movie.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce film ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ movie.id) }}">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">
+                            <i class="bi bi-trash me-2"></i>Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,205 @@
+{
+  "id": "test-movie-crud",
+  "version": "2.0",
+  "name": "Test Movie CRUD",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-movie-crud-list",
+      "name": "View Movie CRUD List",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.crud-list, .movie-list, table, [data-page='movie-crud']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.movie-card, tr, article",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-new",
+      "name": "Create New Movie (CRUD)",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud/new",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[action*='new'], form[method='POST']",
+          "value": "5000"
+        },
+        {
+          "command": "type",
+          "target": "css=input[name*='title'], input[id*='title']",
+          "value": "Test Movie"
+        },
+        {
+          "command": "type",
+          "target": "css=textarea[name*='overview'], textarea[id*='overview']",
+          "value": "This is a test movie description"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit'], button:contains('Create') | button:contains('Save')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, [role='alert'], .movie-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-show",
+      "name": "View Movie Details (CRUD)",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/movie/crud/'], .movie-card, tr",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/movie/crud/']:not([href*='/edit']):not([href*='/delete']), .movie-card",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-details, .movie-show, h1, h2",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-edit",
+      "name": "Edit Movie (CRUD)",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST']",
+          "value": "5000"
+        },
+        {
+          "command": "clear",
+          "target": "css=input[name*='title']",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[name*='title']",
+          "value": "Updated Movie Title"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, .movie-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-delete",
+      "name": "Delete Movie (CRUD)",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=button[name='_delete'], button:contains('Delete'), form[method='POST']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=button[name='_delete'], button:contains('Delete')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, body",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-filter-by-year",
+      "name": "Filter Movies by Year",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud/findBefore/2020",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, .crud-list, table, [data-page='movie-crud']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.movie-card, tr, article",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "movie-crud-suite",
+      "name": "Movie CRUD Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-movie-crud-list",
+        "test-movie-crud-new",
+        "test-movie-crud-show",
+        "test-movie-crud-edit",
+        "test-movie-crud-delete",
+        "test-movie-crud-filter-by-year"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

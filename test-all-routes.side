@@ -1,0 +1,176 @@
+{
+  "id": "test-all-routes",
+  "version": "2.0",
+  "name": "Test All Routes - Complete Suite",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-home",
+      "name": "Home Route /",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=body",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-login-route",
+      "name": "Login Route /login",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/login",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST'], .login-form",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movies-route",
+      "name": "Movies Route /movies",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.movie-list, .movies, [data-page='movies']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-movie-crud-route",
+      "name": "Movie CRUD Route /movie/crud",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movie/crud",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.crud-list, .movie-list, [data-page='movie-crud']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-favorites-route",
+      "name": "Favorites Route /favorites",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/favorites",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.favorites, [data-page='favorites']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-rating-route",
+      "name": "Rating Route /rating",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/rating",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.ratings-list, .rating-item, [data-page='ratings']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-collections-route",
+      "name": "Collections Route /collections",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.collections-list, [data-page='collections']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-contact-route",
+      "name": "Contact Route /contact",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/contact",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form, .contact, [data-page='contact']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-404-route",
+      "name": "Non-existent Route (404)",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/nonexistent",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=body",
+          "value": "5000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "all-routes-suite",
+      "name": "All Routes Test Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-home",
+        "test-login-route",
+        "test-movies-route",
+        "test-movie-crud-route",
+        "test-favorites-route",
+        "test-rating-route",
+        "test-collections-route",
+        "test-contact-route",
+        "test-404-route"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

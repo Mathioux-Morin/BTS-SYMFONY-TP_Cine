@@ -1,0 +1,136 @@
+{
+  "id": "test-favorites-contact",
+  "version": "2.0",
+  "name": "Test Favorites and Contact",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-favorites-page",
+      "name": "View Favorites Page",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/favorites",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.favorites-list, .favorite-item, [data-page='favorites']",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-add-to-favorites",
+      "name": "Add Movie to Favorites",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/movies",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/movies/'], .movie-card",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/movies/'], .movie-card",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=button:contains('Favorite'), button:contains('Add'), a[href*='favorite']",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=button:contains('Favorite'), button:contains('Add'), a[href*='favorite']",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-contact-page",
+      "name": "View Contact Page",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/contact",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form, .contact-form, [data-page='contact']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=input[type='email'], input[type='text'], textarea",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-contact-form-submission",
+      "name": "Submit Contact Form",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/contact",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form",
+          "value": "5000"
+        },
+        {
+          "command": "type",
+          "target": "css=input[type='email'], input[name*='email']",
+          "value": "test@example.com"
+        },
+        {
+          "command": "type",
+          "target": "css=input[type='text']:first-of-type, input[name*='name'], input[name*='subject']",
+          "value": "Test Subject"
+        },
+        {
+          "command": "type",
+          "target": "css=textarea, textarea[name*='message']",
+          "value": "This is a test message for the contact form."
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit'], button:contains('Send')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, [role='alert']",
+          "value": "5000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "favorites-contact-suite",
+      "name": "Favorites and Contact Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-favorites-page",
+        "test-add-to-favorites",
+        "test-contact-page",
+        "test-contact-form-submission"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}

@@ -1,0 +1,284 @@
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-secondary border-0 shadow-lg">
+                <div class="card-body p-5">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                        
+                        {# Champ Nom de la collection #}
+                        <div class="mb-4">
+                            {{ form_label(form.name, 'Nom de la collection', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Ex: Mes films préférés'}}) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Films dans cette collection</label>
+
+                            {# Barre de recherche #}
+                            <div class="mb-3">
+                                <input type="text" id="searchMovies" class="form-control form-control-lg" placeholder="Rechercher un film par titre..." autocomplete="off">
+                                <small class="text-muted d-block mt-2">Minimum 2 caractères pour lancer la recherche</small>
+                            </div>
+
+                            {# Résultats de la recherche #}
+                            <div id="searchResults" class="mb-4" style="max-height: 400px; overflow-y: auto;">
+                                <!-- Les résultats s'affichent ici via JS -->
+                            </div>
+
+                            {# Films sélectionnés (Champ caché Symfony) #}
+                            {# On s'assure que c'est bien caché mais présent pour le JS #}
+                            {# <div class="d-none">
+                                {{ form_widget(form.movies, {'attr': {'id': 'moviesSelect'}}) }}
+                            </div> #}
+                            <div class="d-none">
+                                {{ form_widget(form.movies, {'attr': {'id': 'moviesSelect', 'required': false}}) }}
+                            </div>
+
+                            {# Affichage visuel des films sélectionnés (Badges) #}
+                            <div>
+                                <label class="form-label fw-bold mt-4 mb-3" id="selectedCountLabel">
+                                    Films sélectionnés ({{ form.movies.vars.value|length }})
+                                </label>
+                                
+                                <div id="selectedMovies" class="d-flex flex-wrap gap-2">
+                                    {% for movie in form.movies.vars.value %}
+                                        <div class="badge bg-primary p-2 d-flex align-items-center gap-2 movie-badge" data-movie-id="{{ movie.id }}">
+                                            {{ movie.title }}
+                                            <button type="button" class="btn-close btn-close-white btn-sm ms-1 btn-remove-movie" data-movie-id="{{ movie.id }}"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <p class="text-muted {{ form.movies.vars.value|length > 0 ? 'd-none' : '' }}" id="emptyMessage">
+                                    Aucun film sélectionné
+                                </p>
+                            </div>
+
+                            {{ form_errors(form.movies) }}
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-between mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="bi bi-check-circle me-2"></i>{{ button_label|default('Enregistrer') }}
+                            </button>
+                            <a href="{{ path('app_collections_index') }}" class="btn btn-outline-light btn-lg px-5">
+                                <i class="bi bi-arrow-left me-2"></i>Annuler
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #searchResults {
+        border: 1px solid #495057;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        background-color: #2d2d2d;
+    }
+    #searchResults::-webkit-scrollbar { width: 8px; }
+    #searchResults::-webkit-scrollbar-track { background: transparent; }
+    #searchResults::-webkit-scrollbar-thumb { background: #656565; border-radius: 4px; }
+    #searchResults::-webkit-scrollbar-thumb:hover { background: #787878; }
+    .badge { font-size: 0.9rem; }
+    .card-body { padding: 1rem; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imagePrefix = '{{ tmdb_image_prefix }}';
+    const searchUrl = '{{ path("app_collections_search_movies") }}';
+    
+    let selectedMoviesSet = new Set();
+    
+    const searchInput = document.getElementById('searchMovies');
+    const resultsContainer = document.getElementById('searchResults');
+    const selectedContainer = document.getElementById('selectedMovies');
+    const hiddenSelect = document.getElementById('moviesSelect');
+    const countLabel = document.getElementById('selectedCountLabel');
+    const emptyMessage = document.getElementById('emptyMessage');
+
+    // 1. Initialisation
+    document.querySelectorAll('.movie-badge').forEach(badge => {
+        const id = badge.dataset.movieId;
+        if(id) selectedMoviesSet.add(parseInt(id));
+    });
+    updateCounterUI();
+
+    // 2. Gestion de la recherche
+    searchInput.addEventListener('input', debounce(function(e) {
+        const query = e.target.value.trim();
+
+        if (query.length < 2) {
+            resultsContainer.innerHTML = '';
+            return;
+        }
+
+        fetch(`${searchUrl}?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = '';
+
+                if (!data.results || data.results.length === 0) {
+                    resultsContainer.innerHTML = '<p class="text-muted p-2">Aucun film trouvé</p>';
+                    return;
+                }
+
+                data.results.forEach(movie => {
+                    const isSelected = selectedMoviesSet.has(movie.id);
+                    const movieEl = document.createElement('div');
+                    movieEl.className = 'card bg-dark text-light mb-3 border-secondary';
+                    
+                    const imageHtml = movie.poster_path 
+                        ? `<img src="${imagePrefix}${movie.poster_path}" class="img-fluid rounded-start" alt="${escapeHtml(movie.title)}" style="height: 150px; object-fit: cover;">` 
+                        : '<div style="height: 150px; background-color: #444; display: flex; align-items: center; justify-content: center;" class="rounded-start">Pas d\'image</div>';
+
+                    const year = movie.release_date ? `(${movie.release_date.substring(0, 4)})` : '';
+                    const overview = movie.overview ? (movie.overview.substring(0, 100) + (movie.overview.length > 100 ? '...' : '')) : '';
+
+                    movieEl.innerHTML = `
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                ${imageHtml}
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h6 class="card-title">${escapeHtml(movie.title)} <small class="text-muted">${year}</small></h6>
+                                    <p class="card-text small text-muted mt-1 mb-2">${escapeHtml(overview)}</p>
+                                    
+                                    <button type="button" 
+                                            class="btn btn-sm ${isSelected ? 'btn-success' : 'btn-primary'} js-btn-toggle" 
+                                            data-movie-id="${movie.id}" 
+                                            data-movie-title="${escapeHtml(movie.title)}">
+                                        <i class="bi ${isSelected ? 'bi-check' : 'bi-plus'}"></i> 
+                                        ${isSelected ? 'Ajouté' : 'Ajouter'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.appendChild(movieEl);
+                });
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                resultsContainer.innerHTML = '<p class="text-danger p-2">Erreur lors de la recherche.</p>';
+            });
+    }, 300));
+
+    // 3. Gestion du clic sur "Ajouter/Ajouté"
+    resultsContainer.addEventListener('click', function(e) {
+        const button = e.target.closest('.js-btn-toggle');
+        if (!button) return;
+
+        const movieId = parseInt(button.dataset.movieId);
+        const movieTitle = button.dataset.movieTitle;
+
+        if (selectedMoviesSet.has(movieId)) {
+            removeMovie(movieId);
+            button.classList.remove('btn-success');
+            button.classList.add('btn-primary');
+            button.innerHTML = '<i class="bi bi-plus"></i> Ajouter';
+        } else {
+            addMovie(movieId, movieTitle);
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-success');
+            button.innerHTML = '<i class="bi bi-check"></i> Ajouté';
+        }
+    });
+
+    // 4. Gestion du clic sur la croix "Supprimer"
+    selectedContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-remove-movie')) {
+            const movieId = parseInt(e.target.dataset.movieId);
+            removeMovie(movieId);
+
+            const resultBtn = resultsContainer.querySelector(`.js-btn-toggle[data-movie-id="${movieId}"]`);
+            if (resultBtn) {
+                resultBtn.classList.remove('btn-success');
+                resultBtn.classList.add('btn-primary');
+                resultBtn.innerHTML = '<i class="bi bi-plus"></i> Ajouter';
+            }
+        }
+    });
+
+    // --- Fonctions Utilitaires ---
+
+    function addMovie(id, title) {
+        selectedMoviesSet.add(id);
+
+        if (hiddenSelect) {
+            if (hiddenSelect.tagName === 'SELECT') {
+                const option = new Option(title, id, true, true);
+                hiddenSelect.add(option);
+            } else {
+                console.error("Erreur: #moviesSelect n'est pas un <select>. C'est un " + hiddenSelect.tagName);
+            }
+        }
+
+        const badge = document.createElement('div');
+        badge.className = 'badge bg-primary p-2 d-flex align-items-center gap-2 movie-badge';
+        badge.dataset.movieId = id;
+        badge.innerHTML = `
+            ${escapeHtml(title)}
+            <button type="button" class="btn-close btn-close-white btn-sm ms-1 btn-remove-movie" data-movie-id="${id}"></button>
+        `;
+        selectedContainer.appendChild(badge);
+
+        updateCounterUI();
+    }
+
+    function removeMovie(id) {
+        selectedMoviesSet.delete(id);
+
+        if (hiddenSelect && hiddenSelect.tagName === 'SELECT') {
+            for (let i = 0; i < hiddenSelect.options.length; i++) {
+                if (parseInt(hiddenSelect.options[i].value) === id) {
+                    hiddenSelect.remove(i);
+                    break;
+                }
+            }
+        }
+
+        const badge = selectedContainer.querySelector(`.movie-badge[data-movie-id="${id}"]`);
+        if (badge) badge.remove();
+
+        updateCounterUI();
+    }
+
+    function updateCounterUI() {
+        const count = selectedMoviesSet.size;
+        countLabel.textContent = `Films sélectionnés (${count})`;
+        
+        if (count === 0) {
+            emptyMessage.classList.remove('d-none');
+        } else {
+            emptyMessage.classList.add('d-none');
+        }
+    }
+
+    function debounce(func, delay) {
+        let timeoutId;
+        return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+});
+</script>

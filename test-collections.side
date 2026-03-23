@@ -1,0 +1,215 @@
+{
+  "id": "test-collections",
+  "version": "2.0",
+  "name": "Test Collections",
+  "url": "http://localhost",
+  "tests": [
+    {
+      "id": "test-collections-list",
+      "name": "View Collections List",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.collections-list, .collection-item, table, [data-page='collections']",
+          "value": "5000"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=.collection-card, tr, article",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-collections-new",
+      "name": "Create New Collection",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections/new",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST'], form[action*='new']",
+          "value": "5000"
+        },
+        {
+          "command": "type",
+          "target": "css=input[name*='name'], input[id*='name']",
+          "value": "My Favorite Movies"
+        },
+        {
+          "command": "type",
+          "target": "css=textarea[name*='description'], textarea[id*='description']",
+          "value": "A collection of my favorite movies"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit'], button:contains('Create') | button:contains('Save')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, .collections-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-collections-search-movies",
+      "name": "Search Movies in Collection",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections/new",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=input[placeholder*='search' i], input[name*='movie']",
+          "value": "5000"
+        },
+        {
+          "command": "type",
+          "target": "css=input[placeholder*='search' i], input[name*='movie']",
+          "value": "Interstellar"
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.search-results, [role='listbox'], ul li",
+          "value": "3000"
+        },
+        {
+          "command": "click",
+          "target": "css=.search-results li:first-child, [role='option']:first-child",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-collections-show",
+      "name": "View Collection Details",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/collections/']:not([href*='/edit']), .collection-card, tr",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/collections/']:not([href*='/edit']), .collection-card",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.collection-details, .collection-show, h1, h2",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-collections-edit",
+      "name": "Edit Collection",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=a[href*='/edit'], button:contains('Edit')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=form[method='POST']",
+          "value": "5000"
+        },
+        {
+          "command": "clear",
+          "target": "css=input[name*='name']",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "css=input[name*='name']",
+          "value": "Updated Collection Name"
+        },
+        {
+          "command": "click",
+          "target": "css=button[type='submit']",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.alert.alert-success, .collections-list",
+          "value": "5000"
+        }
+      ]
+    },
+    {
+      "id": "test-collections-delete",
+      "name": "Delete Collection",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost/collections",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=button[name='_delete'], button:contains('Delete')",
+          "value": "5000"
+        },
+        {
+          "command": "click",
+          "target": "css=button[name='_delete'], button:contains('Delete')",
+          "value": ""
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=.collections-list, body",
+          "value": "5000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "collections-suite",
+      "name": "Collections Suite",
+      "parallel": false,
+      "persistSession": false,
+      "timeout": 300,
+      "tests": [
+        "test-collections-list",
+        "test-collections-new",
+        "test-collections-search-movies",
+        "test-collections-show",
+        "test-collections-edit",
+        "test-collections-delete"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost/"
+  ],
+  "plugins": []
+}
